@@ -1,24 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-
-// Um componente simples só para testar o redirecionamento pós-login
-const Dashboard = () => (
-  <div style={{ padding: '20px' }}>
-    <h1>Bem-vindo ao Sistema de Vendas! 🚀</h1>
-    <p>Você está logado.</p>
-    <button onClick={() => {
-        localStorage.clear();
-        window.location.href = '/';
-    }}>Sair</button>
-  </div>
-);
+import Dashboard from './pages/Dashboard'; // <--- Importe a Dashboard
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        
+        {/* Aqui definimos a rota /dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
+        
+        {/* Se digitar qualquer coisa errada, volta pro login */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
