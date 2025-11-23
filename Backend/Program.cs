@@ -2,6 +2,7 @@ using Backend.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;// <--- Importante para o Swagger funcionar
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,40 @@ var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"] ?? "EstaEUmaC
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SalesSystem API", Version = "v1" });
+
+    // Define que usamos JWT Bearer
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"Cabeçalho de autorização JWT usando o esquema Bearer.
+                      Entre com 'Bearer ' [espaço] e então seu token.
+                      Exemplo: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
+});
 
 // 3. CORS
 builder.Services.AddCors(options =>
