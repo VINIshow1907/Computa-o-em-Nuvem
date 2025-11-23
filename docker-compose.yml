@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # --- SERVIÇO 1: POSTGRESQL ---
+  db:
+    image: postgres:15-alpine
+    container_name: sales_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: senhaforte123
+      POSTGRES_DB: salesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # NOVO: Verifica a cada 5s se o banco já acordou
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d salesdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sales-net
+
+  # --- SERVIÇO 2: BACKEND API ---
+  api:
+    image: sales-api-image
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: sales_api
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=salesdb;Username=admin;Password=senhaforte123;
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        # NOVO: Só inicia a API depois que o Healthcheck do banco der OK
+        condition: service_healthy
+    networks:
+      - sales-net
+
+  # web: (Mantive comentado)
+  #   build:
+  #     context: ./Frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:80"
+  #   networks:
+  #     - sales-net
+
+volumes:
+  pgdata:
+
+networks:
+  sales-net:
+    driver: bridge
