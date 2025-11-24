@@ -99,6 +99,7 @@ export default function Dashboard() {
             <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
                 <button disabled style={{ padding: '8px', cursor: 'default', fontWeight: 'bold', background: '#ddd' }}>📦 Produtos</button>
                 <button onClick={() => navigate('/clients')} style={{ padding: '8px', cursor: 'pointer' }}>👥 Ir para Clientes</button>
+                <button onClick={() => navigate('/sales')} style={{ padding: '8px', cursor: 'pointer' }}>💰 Ir para Vendas</button>
                 </div>
                 
                 <h1>Gerenciamento de Produtos 📦</h1>

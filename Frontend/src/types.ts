@@ -9,3 +9,19 @@ export interface Client {
     email: string;
     cpf: string;
 }
+export interface CartItem {
+    productId: number;
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+}
+export interface Sale {
+    id: number;
+    date: string;
+    total: number;
+    items: {
+        productId: number;
+        quantity: number;
+        unitPrice: number;
+    }[];
+}
