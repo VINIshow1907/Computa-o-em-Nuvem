@@ -3,3 +3,9 @@ export interface Product {
     name: string;
     price: number;
 }
+export interface Client {
+    id: number;
+    name: string;
+    email: string;
+    cpf: string;
+}

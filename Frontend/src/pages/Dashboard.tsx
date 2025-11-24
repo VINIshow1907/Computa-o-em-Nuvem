@@ -17,8 +17,6 @@ export default function Dashboard() {
         try {
             const response = await api.get('/products');
             
-            // --- A MÁGICA ESTÁ AQUI ---
-            // Ordena a lista: se o ID de A for menor que B, coloca A antes.
             const sortedProducts = response.data.sort((a: Product, b: Product) => a.id - b.id);
             
             setProducts(sortedProducts);
@@ -96,6 +94,13 @@ export default function Dashboard() {
     return (
         <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'Arial' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                {/* --- NOVO: Botões de Navegação --- */}
+
+            <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+                <button disabled style={{ padding: '8px', cursor: 'default', fontWeight: 'bold', background: '#ddd' }}>📦 Produtos</button>
+                <button onClick={() => navigate('/clients')} style={{ padding: '8px', cursor: 'pointer' }}>👥 Ir para Clientes</button>
+                </div>
+                
                 <h1>Gerenciamento de Produtos 📦</h1>
                 <button onClick={handleLogout} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>
                     Sair
